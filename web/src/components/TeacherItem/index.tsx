@@ -3,34 +3,56 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 
 import './styles.css';
+import api from '../../services/api';
 
-const TeacherItem: React.FC = () => {
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  name: string,
+  subject: string,
+  whatsapp: string,
+
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id
+    })
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img src="https://avatars0.githubusercontent.com/u/26986888?s=460&u=ad764f0e3931a01a51adc3ce999d8d7eb9fa8fe0&v=4" alt="Sergio Vago" />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Sergio Vago</strong>
-          <span>POG</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
-      <p>
-        Entusiasta na POG (Programação Orientada a Gambiarra)
-            <br />
-        <br />
-            Apaixonado por gambiarrar tudo e fazer funcionar
-          </p>
+      <p>{teacher.bio} </p>
 
       <footer>
         <p>
           Preço/hora
-              <strong>R$ 150,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button>
+        <a
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+          target="_blank"
+          rel="noopener noreferrer">
           <img src={whatsappIcon} alt="whatsapp" />
               Entrar em contato
-            </button>
+        </a>
       </footer>
     </article>
   )
